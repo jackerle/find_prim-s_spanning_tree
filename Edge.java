@@ -1,7 +1,10 @@
 import java.awt.*;
 import java.awt.geom.QuadCurve2D;
 
-public class Edge {
+public class Edge{
+
+
+
     Vertex vertexA;
     Vertex vertexB;
 
@@ -23,7 +26,7 @@ public class Edge {
         this.vertexB = b;
         this.color = color;
         this.color_selected = color_selected;
-        this.r_center = 50;
+        this.r_center = 25;
 
     }
 
@@ -31,7 +34,7 @@ public class Edge {
         return ((x0 - x_center) * (x0 - x_center) + (y0 - y_center) * (y0 - y_center)) <= r_center * r_center;
     }
 
-    void draw(Graphics2D g){
+    public void draw(Graphics2D g){
         g.setColor(isSelect?Color.decode(color_selected):Color.decode(color));
         g.setStroke(new BasicStroke(2));
         g.draw(new QuadCurve2D.Float(vertexA.x+missing, vertexA.y+missing, x_center+missing, y_center+missing, vertexB.x+missing, vertexB.y+missing));

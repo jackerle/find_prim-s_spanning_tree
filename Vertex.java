@@ -1,9 +1,12 @@
 import java.awt.*;
 
-public class Vertex {
+public class Vertex{
+
+
     int width = 13;
     int height = 13;
     int r = 15;
+    int degree;
     boolean isSelect = false;
     boolean isOverOnTempEdge = false;
     static int idGen=0;
@@ -18,6 +21,7 @@ public class Vertex {
         this.y = y;
         this.color = color;
         this.color_selected = color_selected;
+        this.degree =0;
         name = "V"+this.idGen;
         idGen++;
     }
