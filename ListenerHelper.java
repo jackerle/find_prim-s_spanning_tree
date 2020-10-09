@@ -23,11 +23,15 @@ public class ListenerHelper implements MouseListener, MouseMotionListener, KeyLi
 
     class Backup {
         Vertexs vertexts_backup;
+        int id_gen_vertex;
+        int id_gen_edge;
         Edges edges_backup;
 
         public Backup(){
             this.vertexts_backup = gui.Vertexs;
             this.edges_backup = gui.Edges;
+            this.id_gen_edge = gui.Edges.idGen;
+            this.id_gen_vertex = gui.Vertexs.idGen;
         }
     }
 
@@ -68,6 +72,8 @@ public class ListenerHelper implements MouseListener, MouseMotionListener, KeyLi
 
         gui.Vertexs = backup.vertexts_backup;
         gui.Edges = backup.edges_backup;
+        gui.Vertexs.idGen = backup.id_gen_vertex;
+        gui.Edges.idGen = backup.id_gen_edge;
 
         //bind object reference
         for (Edge e : gui.Edges) {
@@ -183,12 +189,18 @@ public class ListenerHelper implements MouseListener, MouseMotionListener, KeyLi
 
                 gui.Vertexs.delete_vertex((Vertex) gui.selected,gui.Edges);
                 gui.update_status("deleted Vertex : "+((Vertex) gui.selected).name);
+                gui.selected = null;
+                gui.edit_vertex_name.setVisible(false);
 
             }
             if(gui.selected instanceof Edge){
 
                 gui.Edges.delete_edge((Edge) gui.selected);
                 gui.update_status("deleted Edge : "+((Edge) gui.selected).name);
+                gui.selected = null;
+                gui.edit_edge_name.setVisible(false);
+                gui.edit_weight.setVisible(false);
+
 
             }
 
@@ -221,13 +233,12 @@ public class ListenerHelper implements MouseListener, MouseMotionListener, KeyLi
 
             if(gui.mode==1){
                 if(!gui.Vertexs.contains(gui.selected)){
-                    Vertex a = new Vertex(x,y,gui.vertex_color,gui.vertex_color_selected);
 
-                    gui.Vertexs.add_vertex(a);
+                    gui.Vertexs.add_vertex(x,y,gui.vertex_color,gui.vertex_color_selected);
 
                     gui.mode = 0;
                     gui.selected = null;
-                    gui.update_status("created Verrtex : "+a.name);
+                    gui.update_status("created Verrtex");
                 }
                 else{
                     gui.mode=0;

@@ -13,7 +13,8 @@ public class GUI extends JFrame {
     int screen_height = 720;
     String paint_screen_color = "#272324";
     String menu_bar_color = "#83B799";
-    String vertex_color = "#E2CD6D";String vertex_color_selected = "#E86F68";
+    String vertex_color = "#E2CD6D";
+    String vertex_color_selected = "#E86F68";
     String temp_edge_color = "#ED6A40";
     String edge_color = "#FCB7A8";
     String edge_color_selected = "#E86F68";
@@ -228,7 +229,9 @@ public class GUI extends JFrame {
                         if(start_vertex.length()>0){
                             for(Vertex v : Vertexs){
                                 if(v.name.equals(start_vertex)){
+
                                     JPrim prim = new JPrim(start_vertex,gui);
+
                                     prim.draw();
                                     check=true;
                                     break;

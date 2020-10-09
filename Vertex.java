@@ -9,21 +9,21 @@ public class Vertex{
     int degree;
     boolean isSelect = false;
     boolean isOverOnTempEdge = false;
-    static int idGen=0;
+    int idGen;
     String name;
     String color_selected;
 
     int x, y;
     String color;
 
-    public Vertex(int x, int y,String color,String color_selected) {
+    public Vertex(int x, int y,String color,String color_selected,int idGen) {
         this.x = x;
         this.y = y;
         this.color = color;
         this.color_selected = color_selected;
         this.degree =0;
-        name = "V"+this.idGen;
-        idGen++;
+        this.idGen = idGen;
+        name = "V"+idGen;
     }
 
 

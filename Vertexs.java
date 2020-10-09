@@ -4,11 +4,13 @@ import java.util.Stack;
 
 public class Vertexs extends ArrayList<Vertex> {
 
+    int idGen = 0;
 
+    public void add_vertex(int x,int y,String vertex_color,String vertex_color_selected){
 
-    public void add_vertex(Vertex v){
-
-        this.add(v);
+        Vertex a = new Vertex(x,y,vertex_color,vertex_color_selected,idGen);
+        idGen++;
+        this.add(a);
 
     }
 
@@ -16,7 +18,7 @@ public class Vertexs extends ArrayList<Vertex> {
         for(int i=e.size()-1;i>=0;i--){
             if(e.get(i).vertexA==v||e.get(i).vertexB==v){
 
-                System.out.println("remove :"+i);
+//                System.out.println("remove :"+i);
                 e.delete_edge(e.get(i));
 
             }
