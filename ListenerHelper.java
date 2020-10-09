@@ -1,4 +1,11 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import javax.swing.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class ListenerHelper implements MouseListener, MouseMotionListener, KeyListener {
@@ -12,6 +19,79 @@ public class ListenerHelper implements MouseListener, MouseMotionListener, KeyLi
         this.gui.c.addMouseMotionListener(this);
         this.gui.c.addKeyListener(this);
     }
+
+
+    class Backup {
+        Vertexs vertexts_backup;
+        Edges edges_backup;
+
+        public Backup(){
+            this.vertexts_backup = gui.Vertexs;
+            this.edges_backup = gui.Edges;
+        }
+    }
+
+
+    public void save() throws Exception{
+        String path;
+        JFileChooser f = new JFileChooser();
+        f.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        f.showSaveDialog(null);
+        path = f.getSelectedFile().toString();
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+
+        FileWriter writer = new FileWriter(path);
+
+        Backup backup = new Backup();
+        writer.write(gson.toJson(backup));
+        writer.close();
+
+    }
+
+    public void open()throws Exception{
+
+        String path;
+        JFileChooser f = new JFileChooser();
+        f.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        f.showSaveDialog(null);
+        path = f.getSelectedFile().toString();
+
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
+
+        Backup backup = gson.fromJson(bufferedReader, Backup.class);
+
+        gui.Vertexs = backup.vertexts_backup;
+        gui.Edges = backup.edges_backup;
+
+        //bind object reference
+        for (Edge e : gui.Edges) {
+            if (e.vertexA != null) {
+                String name = e.vertexA.name;
+                for (Vertex v : gui.Vertexs) {
+                    if (v.name.equals(name)) {
+                        e.vertexA = v;
+                        break;
+                    }
+                }
+            }
+            if (e.vertexB != null) {
+                String name = e.vertexB.name;
+                for (Vertex v : gui.Vertexs) {
+                    if (v.name.equals(name)) {
+                        e.vertexB = v;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
 
     public void set_selected(int x,int y){
         Object obj = null;
@@ -70,18 +150,22 @@ public class ListenerHelper implements MouseListener, MouseMotionListener, KeyLi
 
         if(gui.Vertexs.contains(gui.selected)&&gui.mode!=2){
             gui.update_status("Name : "+((Vertex)gui.selected).name+"      Degree : "+((Vertex) gui.selected).degree);
-            gui.edit.setVisible(true);
-            gui.edit.setText("Edit Vertex");
+            gui.edit_vertex_name.setVisible(true);
+            gui.edit_edge_name.setVisible(false);
+            gui.edit_weight.setVisible(false);
 
         }
         else if(gui.Edges.contains(gui.selected)){
-            gui.update_status("Name : "+((Edge)gui.selected).name);
-            gui.edit.setVisible(true);
-            gui.edit.setText("Edit Edge");
+            gui.update_status("Name : "+((Edge)gui.selected).name+"       Weight : "+((Edge) gui.selected).weight);
+            gui.edit_edge_name.setVisible(true);
+            gui.edit_vertex_name.setVisible(false);
+            gui.edit_weight.setVisible(true);
         }
         else{
             gui.update_status("");
-            gui.edit.setVisible(false);
+            gui.edit_vertex_name.setVisible(false);
+            gui.edit_edge_name.setVisible(false);
+            gui.edit_weight.setVisible(false);
         }
     }
 
@@ -164,6 +248,7 @@ public class ListenerHelper implements MouseListener, MouseMotionListener, KeyLi
                     }
                     if(duplicate){
                         gui.update_status("It's duplicate Edge");
+                        gui.alert("It's dupicate Edge");
                     }
                     else{
                         gui.TempEdge.x1 = v.x;

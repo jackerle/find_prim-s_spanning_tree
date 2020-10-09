@@ -14,6 +14,7 @@ public class Edge{
     String color;
     String color_selected;
     int missing = 7;
+    int weight;
 
     boolean isSelect = false;
     String name = "E";
@@ -27,6 +28,7 @@ public class Edge{
         this.color = color;
         this.color_selected = color_selected;
         this.r_center = 25;
+        this.weight = 1;
 
     }
 
