@@ -121,17 +121,29 @@ public class JPrim extends JFrame {
                 }
             }
 
+
+            //set next target
             vt[next].isFinish = true;
             this.start = Vertexs.get(next);
+            Vertex added = (Vertex)Vertexs.get(next).clone();
+            added.width = 30;
+            added.height = 30;
+            added.color = "#ff0000";
+            added.miss = -7;
+            prim_vertex.add(added);
             vt[next].line.stroke = 10;
             vt[next].line.isSelect = true;
-            vt[next].line.color_selected = "#C2E2C3";
+            vt[next].line.color_selected = "#ff0000";
             prim_tree.add(vt[next].line);
             System.out.println(this.start.name);
+            //////////////////////
+
 
             N++;
 
             draw();
+
+
             find_prim_tree();
         }
         else{
@@ -188,6 +200,11 @@ public class JPrim extends JFrame {
         for (Edge e : prim_tree){
             if(e!=null)
                 e.draw(g2);
+        }
+
+        for (Vertex v : prim_vertex){
+            if(v!=null)
+                v.draw(g2);
         }
 
         g.drawImage(grid, null, 0, 0);

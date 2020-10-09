@@ -1,11 +1,12 @@
 import java.awt.*;
 
-public class Vertex{
+public class Vertex implements Cloneable{
 
 
     int width = 13;
     int height = 13;
     int r = 15;
+    int miss = 0;
     int degree;
     boolean isSelect = false;
     boolean isOverOnTempEdge = false;
@@ -26,6 +27,16 @@ public class Vertex{
         name = "V"+idGen;
     }
 
+    public Object clone(){
+        try{
+            return super.clone();
+        }
+        catch (Exception e){
+            return null;
+        }
+
+    }
+
 
     boolean inCircle(int x0, int y0) {
         return ((x0 - x) * (x0 - x) + (y0 - y) * (y0 - y)) <= r * r;
@@ -36,6 +47,6 @@ public class Vertex{
         else if(isOverOnTempEdge)g.setColor(Color.decode(color_selected));
         else g.setColor(Color.decode(color));
         g.drawString(name,x,y-3);
-        g.fillOval(x,y,width,height);
+        g.fillOval(x+miss,y+miss,width,height);
     }
 }
