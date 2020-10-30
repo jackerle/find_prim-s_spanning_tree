@@ -177,9 +177,9 @@ public class GUI extends JFrame {
         JMenuBar mb = new JMenuBar();
 
         JMenu me1 = new JMenu("File");
-        JMenuItem mSave = new JMenuItem("Save      Ctrl+S");
-        JMenuItem mLoad = new JMenuItem("Open      Ctrl+O");
-        JMenuItem mExit = new JMenuItem("Exit      Ctrl+W");
+        JMenuItem mSave = new JMenuItem("Save");
+        JMenuItem mLoad = new JMenuItem("Open");
+        JMenuItem mExit = new JMenuItem("Exit");
 
         mSave.addActionListener(new ActionListener() {
             @Override

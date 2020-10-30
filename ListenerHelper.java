@@ -327,9 +327,72 @@ public class ListenerHelper implements MouseListener, MouseMotionListener, KeyLi
     }
 
     @Override
-    public void mouseDragged(MouseEvent mouseEvent) {
+    public void mouseDragged(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+            if (gui.selected != null) {
+                if (gui.selected instanceof Vertex) {
+                    Vertex s = (Vertex) gui.selected;
+                    for (Edge t : gui.Edges) {
+                        if (t.vertexA == s || t.vertexB == s) {
+                            int difx = x - s.x;
+                            int dify = y - s.y;
+                            if (t.vertexA != t.vertexB) {
+                                if (t.vertexA != null) {
+                                    t.x_center = (t.vertexA.x + t.vertexB.x) / 2;
+                                    t.y_center = (t.vertexA.y + t.vertexB.y) / 2;
+                                }
+                            }else {
+                                t.x_center += difx;
+                                t.y_center += dify;
+                            }
 
-    }
+                        }
+                    }
+                    s.x = x;
+                    s.y = y;
+                } else {
+                    Edge t = (Edge) gui.selected;
+                    t.x_center = x;
+                    t.y_center = y;
+                }
+            }
+
+            try {
+                Vertex Vertex = null;
+                for (Vertex s : gui.Vertexs) {
+
+
+                    //check mouse in circle
+
+
+                    if (s.inCircle(x, y)) {
+                        Vertex = s;
+                    }
+
+
+                }
+                if (Vertex != null) {
+                    if (Vertex != gui.TempEdge.vertexA) {
+                        double angle = Math.atan2(gui.TempEdge.vertexA.y - Vertex.y, gui.TempEdge.vertexA.x - Vertex.x);
+                        double dx = Math.cos(angle);
+                        double dy = Math.sin(angle);
+                        gui.TempEdge.x1 = Vertex.x + (int) (Vertex.r * dx);
+                        gui.TempEdge.y1 = Vertex.y + (int) (Vertex.r * dy);
+                    } else {
+                        gui.TempEdge.x1 = x;
+                        gui.TempEdge.y1 = y;
+                    }
+                } else {
+                    gui.TempEdge.x1 = x;
+                    gui.TempEdge.y1 = y;
+                }
+            } catch (Exception ex) {
+
+            }
+        gui.draw();
+        }
+
 
     @Override
     public void mouseMoved(MouseEvent e) {

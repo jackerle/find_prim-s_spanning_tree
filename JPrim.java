@@ -213,6 +213,7 @@ public class JPrim extends JFrame {
         }
         else{
             System.out.println("finish");
+            gui.success("Finish!");
         }
 
     }
