@@ -24,6 +24,14 @@ public class Vertexs extends ArrayList<Vertex> {
             }
         }
         this.remove(v);
+
+        //handle idGen
+
+        this.idGen = this.size();
+        for(int i=0;i<this.size();i++){
+            this.get(i).idGen = i;
+        }
+
     }
 
     public void draw(Graphics2D g){

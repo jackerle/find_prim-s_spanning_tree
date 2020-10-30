@@ -1,5 +1,10 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,10 +18,13 @@ public class JPrim extends JFrame {
     Edges Edges = new Edges();
     GUI gui;
     BufferedImage grid = null;
+    DefaultTableModel tableModel;
     Canvas c;
+    JPanel menubar;
     Vertex_table[] vt;
     Edges prim_tree = new Edges();
     Vertexs prim_vertex = new Vertexs();
+    JTable table_prime;
     int N = 0;
 
 
@@ -64,47 +72,68 @@ public class JPrim extends JFrame {
             }
         }
 
-        c = create_frame();
-        add(c);
-        setVisible(true);
+
 
 
         vt = new Vertex_table[Vertexs.size()];
         vt[start_index] = new Vertex_table(this.start,null,0);
 
-        find_prim_tree();
+        Vertex added = (Vertex)Vertexs.get(start_index).clone();
+        added.width = 30;
+        added.height = 30;
+        added.color = "#66a103";
+        added.miss = -7;
+        prim_vertex.add(added);
+
+        c = create_frame();
+        menubar = create_bar();
+        tableModel.setValueAt("-",start_index,1);
+        tableModel.setValueAt("-",start_index,2);
+        add(c);
+        add(menubar);
+        setVisible(true);
+        init_();
 //        draw();
 
     }
 
 
-    public void find_prim_tree(){
+    public void init_ (){
+        vt[start_index].isFinish = true;
 
-        if(N<Vertexs.size()-1){
-            vt[start_index].isFinish = true;
+        //-------------Change table-----------------//
+        for(int i=0;i<Edges.size();i++){
 
-            //-------------Change table-----------------//
-            for(int i=0;i<Edges.size();i++){
+            Edge edge = Edges.get(i);
 
-                Edge edge = Edges.get(i);
+            if(edge.vertexA.name.equals(this.start.name)){
+                int id = edge.vertexB.idGen;
 
-                if(edge.vertexA.name.equals(this.start.name)){
-                    int id = edge.vertexB.idGen;
-
-                    if((vt[id]==null||((vt[id].distance>edge.weight)&&!vt[id].isFinish))){
-                        vt[id] = new Vertex_table(this.start,edge,edge.weight);
-                    }
+                if((vt[id]==null||((vt[id].distance>edge.weight)&&vt[id].isFinish==false))){
+                    vt[id] = new Vertex_table(this.start,edge,edge.weight);
+                    tableModel.setValueAt(edge.weight,edge.vertexB.idGen,1);
+                    tableModel.setValueAt(this.start.name,edge.vertexB.idGen,2);
                 }
-                if(Edges.get(i).vertexB.name.equals(this.start.name)){
-                    int id = edge.vertexA.idGen;
+            }
+            if(Edges.get(i).vertexB.name.equals(this.start.name)){
+                int id = edge.vertexA.idGen;
 
-                    if((vt[id]==null||((vt[id].distance>edge.weight)&&!vt[id].isFinish))){
-                        vt[id] = new Vertex_table(this.start,edge,edge.weight);
-                    }
+                if((vt[id]==null||((vt[id].distance>edge.weight)&&vt[id].isFinish==false))){
+                    vt[id] = new Vertex_table(this.start,edge,edge.weight);
+                    tableModel.setValueAt(edge.weight,edge.vertexA.idGen,1);
+                    tableModel.setValueAt(this.start.name,edge.vertexA.idGen,2);
+
                 }
-
             }
 
+        }
+    }
+
+
+    public void find_prim_tree(){
+
+
+        if(N<Vertexs.size()-1){
 
             //---------------------------------------
 
@@ -124,8 +153,11 @@ public class JPrim extends JFrame {
 
             //set next target
             vt[next].isFinish = true;
+            System.out.println(vt[next].isFinish);
             this.start = Vertexs.get(next);
             Vertex added = (Vertex)Vertexs.get(next).clone();
+            tableModel.setValueAt("-",next,1);
+            tableModel.setValueAt("-",next,2);
             added.width = 30;
             added.height = 30;
             added.color = "#ff0000";
@@ -144,7 +176,40 @@ public class JPrim extends JFrame {
             draw();
 
 
-            find_prim_tree();
+
+            vt[start_index].isFinish = true;
+
+            //-------------Change table-----------------//
+            for(int i=0;i<Edges.size();i++){
+
+                Edge edge = Edges.get(i);
+
+                if(edge.vertexA.name.equals(this.start.name)){
+                    int id = edge.vertexB.idGen;
+
+                    if((vt[id]==null||((vt[id].distance>edge.weight)&&vt[id].isFinish==false))){
+                        vt[id] = new Vertex_table(this.start,edge,edge.weight);
+                        tableModel.setValueAt(edge.weight,edge.vertexB.idGen,1);
+                        tableModel.setValueAt(this.start.name,edge.vertexB.idGen,2);
+                    }
+                }
+                if(Edges.get(i).vertexB.name.equals(this.start.name)){
+                    int id = edge.vertexA.idGen;
+
+                    if((vt[id]==null||((vt[id].distance>edge.weight)&&vt[id].isFinish==false))){
+                        vt[id] = new Vertex_table(this.start,edge,edge.weight);
+                        tableModel.setValueAt(edge.weight,edge.vertexA.idGen,1);
+                        tableModel.setValueAt(this.start.name,edge.vertexA.idGen,2);
+
+                    }
+                }
+
+            }
+
+
+
+
+//            find_prim_tree();
         }
         else{
             System.out.println("finish");
@@ -161,10 +226,53 @@ public class JPrim extends JFrame {
                 draw();
             }
         };
+
         c.setBackground(Color.decode(gui.paint_screen_color));
         c.setBounds(0,0,gui.screen_width-(gui.screen_width/4),gui.screen_height);
 
+
         return c;
+    }
+
+    public JPanel create_bar(){
+        JPanel menubar = new JPanel();
+        JButton next_butt = new JButton("Next");
+
+        menubar.setBackground(Color.decode(gui.menu_bar_color));
+        menubar.setBounds(gui.screen_width-(gui.screen_width/4),0,(gui.screen_width/4),gui.screen_height);
+
+
+        Object[] column = {"Vertex","Weight","From"};
+        tableModel = new DefaultTableModel(null,column);
+
+        Object[][] data  = new Object[vt.length][3];
+
+        for(int i=0;i<vt.length;i++){
+            data[i][0] = Vertexs.get(i).name;
+            data[i][1] = "inf";
+            data[i][2] = "inf";
+            tableModel.addRow(data[i]);
+        }
+
+
+        table_prime = new JTable(tableModel);
+        table_prime.setFont(new Font("Serif", Font.BOLD, 18));
+        table_prime.setRowHeight(table_prime.getRowHeight()+15);
+        table_prime.setEnabled(false);
+
+        JScrollPane jpane = new JScrollPane(table_prime);
+        jpane.setBounds(gui.screen_width-(gui.screen_width/4)+30,30,(gui.screen_width/8)+60,300);
+        next_butt.setBounds(gui.screen_width-(gui.screen_width/4)+30,380,(gui.screen_width/8),45);
+        next_butt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                find_prim_tree();
+            }
+        });
+        getContentPane().add(jpane);
+        getContentPane().add(next_butt);
+
+        return menubar;
     }
 
 
@@ -208,7 +316,7 @@ public class JPrim extends JFrame {
         }
 
         g.drawImage(grid, null, 0, 0);
-
+        tableModel.fireTableDataChanged();
 
     }
 

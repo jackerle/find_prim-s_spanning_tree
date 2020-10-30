@@ -170,6 +170,8 @@ public class GUI extends JFrame {
 
         return menubar;
     }
+
+
     public JMenuBar mb(){
         GUI gui = this;
         JMenuBar mb = new JMenuBar();
@@ -206,6 +208,7 @@ public class GUI extends JFrame {
         });
 
         JMenu me2 = new JMenu("Process");
+
         JMenuItem prim = new JMenuItem("Prim's algorithm");
 
         me2.add(prim);

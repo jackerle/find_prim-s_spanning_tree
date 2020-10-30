@@ -23,6 +23,13 @@ public class Edges extends ArrayList<Edge>{
         e.vertexA.degree--;
         this.remove(e);
 
+        //handle id_gen
+
+        this.idGen = this.size();
+        for(int i=0;i<this.size();i++){
+            this.get(i).idGen = i;
+        }
+
     }
 
 
